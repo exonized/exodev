@@ -12,13 +12,6 @@ class User(Base):
     roles = Column(String,  default=('Membre'))
     avatar = Column(String, default=('Avatar/base.png'))
     hashed_password = Column(String)
-    adresse = Column(String)
-    complement = Column(String)
-    codepostal = Column(Integer)
-    region = Column(String)
-    numerorue = Column(Integer)
 
     def verify_password(self, password: str):
         return _hash.bcrypt.verify(password, self.hashed_password)
-
-
