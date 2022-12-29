@@ -8,11 +8,6 @@ import pydantic as _pydantic
 class _UserBase(_pydantic.BaseModel):
     email: str
     pseudo: str
-    adresse: str
-    complement: str
-    codepostal: int
-    region: str
-    numerorue: int
 
 
 class UserCreate(_UserBase):
@@ -29,5 +24,3 @@ class User(_UserBase):
 
     class Config:
         orm_mode = True
-
-

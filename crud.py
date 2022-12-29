@@ -31,7 +31,7 @@ async def create_token(user: models.User):
 
     token = jwtt.encode(user_obj.dict(), JWT_SECRET)
 
-    return dict(access_token=token, token_type="bearer", roles=user.roles, email=user.email)
+    return dict(access_token=token, token_type="bearer", roles=user.roles, email=user.email, id=user.id)
 
 
 async def create_user(user: schemas.UserCreate, db: _orm.Session):
@@ -87,5 +87,3 @@ async def delete_current_user(
         )
 
     return schemas.User.from_orm(user)
-
-
