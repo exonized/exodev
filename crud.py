@@ -36,7 +36,7 @@ async def create_token(user: models.User):
 
 async def create_user(user: schemas.UserCreate, db: _orm.Session):
     user_obj = models.User(
-        email=user.email, hashed_password=_hash.bcrypt.hash(user.hashed_password), pseudo=user.pseudo, adresse=user.adresse, complement=user.complement, codepostal=user.codepostal, region=user.region, numerorue=user.numerorue
+        email=user.email, hashed_password=_hash.bcrypt.hash(user.hashed_password), pseudo=user.pseudo
     )
     db.add(user_obj)
     db.commit()
