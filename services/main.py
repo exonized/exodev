@@ -98,4 +98,4 @@ async def create_user(
 
 @app.get("/", tags=["api"])
 def read_services():
-    return "API ANTHONY"
+    return "API ANTHONY TEST"

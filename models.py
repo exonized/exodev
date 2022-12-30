@@ -15,3 +15,11 @@ class User(Base):
 
     def verify_password(self, password: str):
         return _hash.bcrypt.verify(password, self.hashed_password)
+
+
+class Contact(Base):
+    __tablename__ = "Contact"
+    id = Column(Integer, primary_key=True, index=True)
+    id_user = Column(int)
+    types = Column(String)
+    contenu = Column(String)
