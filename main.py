@@ -84,6 +84,13 @@ async def delete_user(user: schemas.User = fastapi.Depends(crud.delete_current_u
     return user
 
 
+@app.post("/api/contact", tags=["Contact"])
+async def create_user(
+    contact: schemas.UserCreate, db: _orm.Session = fastapi.Depends(crud.get_db)
+):
+    return await crud.create_contact(contact)
+
+
 # API  (Base)
 
 @app.get("/", tags=["api"])
