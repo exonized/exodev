@@ -90,6 +90,7 @@ async def delete_current_user(
 
 
 async def create_contact(contact: schemas.ContactCreate, db: _orm.Session, token: str = fastapi.Depends(oauth2schema)):
+
     payload = jwtt.decode(token, JWT_SECRET, algorithms=["HS256"])
     userid = db.query(models.User).get(payload["id"])
     contact_obj = models.Contact(

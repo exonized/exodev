@@ -20,6 +20,6 @@ class User(Base):
 class Contact(Base):
     __tablename__ = "Contact"
     id = Column(Integer, primary_key=True, index=True)
-    id_user = Column(int)
+    id_user = Column(Integer)
     types = Column(String)
     contenu = Column(String)
