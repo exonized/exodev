@@ -1,9 +1,10 @@
 import sqlalchemy.orm as _orm
 
 import passlib.hash as _hash
-import jwt as jwtt
+import jwt
 import fastapi
 import fastapi.security as _security
+from sqlalchemy import or_
 
 import models
 import schemas
@@ -26,10 +27,14 @@ async def get_user_by_email(email: str, db: _orm.Session):
     return db.query(models.User).filter(models.User.email == email).first()
 
 
+async def get_user_by_id(id: str, db: _orm.Session):
+    return db.query(models.User).filter(models.User.id == id).first()
+
+
 async def create_token(user: models.User):
     user_obj = schemas.User.from_orm(user)
 
-    token = jwtt.encode(user_obj.dict(), JWT_SECRET)
+    token = jwt.encode(user_obj.dict(), JWT_SECRET)
 
     return dict(access_token=token, token_type="bearer", roles=user.roles, email=user.email, id=user.id)
 
@@ -61,7 +66,7 @@ async def get_current_user(
     token: str = fastapi.Depends(oauth2schema),
 ):
     try:
-        payload = jwtt.decode(token, JWT_SECRET, algorithms=["HS256"])
+        payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
         user = db.query(models.User).get(payload["id"])
     except:
         raise fastapi.HTTPException(
@@ -76,27 +81,68 @@ async def delete_current_user(
     token: str = fastapi.Depends(oauth2schema),
 ):
     try:
-        payload = jwtt.decode(token, JWT_SECRET, algorithms=["HS256"])
+        payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
         user = db.query(models.User).get(payload["id"])
         db.delete(user)
         db.commit()
 
     except:
         raise fastapi.HTTPException(
-            status_code=401, detail="Problème lors de la supprésion"
+            status_code=401, detail="Problème lors de la suppression"
         )
 
     return schemas.User.from_orm(user)
 
 
-async def create_contact(contact: schemas.ContactCreate, db: _orm.Session, token: str = fastapi.Depends(oauth2schema)):
+async def create_contact(
+    Contact: schemas.ContactCreate,
+    db: _orm.Session = fastapi.Depends(get_db),
+    token: str = fastapi.Depends(oauth2schema),
 
-    payload = jwtt.decode(token, JWT_SECRET, algorithms=["HS256"])
-    userid = db.query(models.User).get(payload["id"])
+):
+    payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+    user = db.query(models.User).get(payload["id"])
+
     contact_obj = models.Contact(
-        id_user=userid, types=contact.types, contenu=contact.contenu
+        id_user=user.id, types=Contact.types, contenu=Contact.contenu
     )
     db.add(contact_obj)
     db.commit()
     db.refresh(contact_obj)
-    return contact_obj
+
+    return (contact_obj)
+
+
+async def get_me_contact(
+    db: _orm.Session = fastapi.Depends(get_db),
+    token: str = fastapi.Depends(oauth2schema),
+
+):
+    payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+    user = db.query(models.User).get(payload["id"])
+    test = db.query(models.Contact).filter(
+        models.Contact.id_user == models.User.id).all()
+
+    return (test)
+
+
+async def get_me_contact_id(
+    id: int,
+    db: _orm.Session = fastapi.Depends(get_db),
+    token: str = fastapi.Depends(oauth2schema),
+):
+    contact = db.query(models.Contact).filter(
+        models.Contact.id == id).all()
+
+    return contact
+
+
+async def delete_contact(
+    id: int,
+    db: _orm.Session = fastapi.Depends(get_db),
+    token: str = fastapi.Depends(oauth2schema),
+):
+    contact = db.query(models.Contact).filter(models.Contact.id == id).delete()
+    db.commit()
+
+    return contact

@@ -27,13 +27,11 @@ class User(_UserBase):
 
 
 class _ContactBase(_pydantic.BaseModel):
-    id_user: int
     types: str
     contenu: str
 
 
 class ContactCreate(_ContactBase):
-    hashed_password: str
 
     class Config:
         orm_mode = True
@@ -41,6 +39,8 @@ class ContactCreate(_ContactBase):
 
 class Contact(_ContactBase):
     id: int
+    id_user: int
+    etat = str
 
     class Config:
         orm_mode = True

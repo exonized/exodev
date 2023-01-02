@@ -85,13 +85,27 @@ async def delete_user(user: schemas.User = fastapi.Depends(crud.delete_current_u
 
 
 @app.post("/api/contact", tags=["Contact"])
-async def contact_create(
-    contact: schemas.ContactCreate, db: _orm.Session = fastapi.Depends(crud.get_db)
-):
-    return await crud.create_contact(contact, db)
+async def contact_create(contact: schemas.Contact = fastapi.Depends(crud.create_contact)):
+    return contact
+
+
+@app.get("/api/me/contact", tags=["Contact"])
+async def get_me_contact(contact: schemas.Contact = fastapi.Depends(crud.get_me_contact)):
+    return contact
+
+
+@app.get("/api/me/contact/{id}", tags=["Contact"])
+async def get_me_contact_id(contact: schemas.Contact = fastapi.Depends(crud.get_me_contact_id)):
+    return contact
+
+
+@app.delete("/api/me/contact/delete/{id}", tags=["Contact"])
+async def delete_contact(id: int, contact: schemas.Contact = fastapi.Depends(crud.delete_contact)):
+    return {"supprimer": contact}
 
 
 # API  (Base)
+
 
 @app.get("/", tags=["api"])
 def read_services():

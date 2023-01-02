@@ -23,3 +23,4 @@ class Contact(Base):
     id_user = Column(Integer)
     types = Column(String)
     contenu = Column(String)
+    etat = Column(String,  default=('Non traité'))
