@@ -15,6 +15,8 @@ oauth2schema = _security.OAuth2PasswordBearer(tokenUrl="/api/token")
 JWT_SECRET = "myjwtsecret"
 
 
+# Utilisateur
+
 def get_db():
     db = database.SessionLocal()
     try:
@@ -94,6 +96,9 @@ async def delete_current_user(
     return schemas.User.from_orm(user)
 
 
+# Contact
+
+
 async def create_contact(
     Contact: schemas.ContactCreate,
     db: _orm.Session = fastapi.Depends(get_db),
@@ -120,10 +125,14 @@ async def get_me_contact(
 ):
     payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
     user = db.query(models.User).get(payload["id"])
-    test = db.query(models.Contact).filter(
-        models.Contact.id_user == models.User.id).all()
+    print(user.id)
+    result = db.query(models.Contact).where(models.Contact.id_user == user.id)
 
-    return (test)
+    # contact = db.query(models.Contact).get(models.Contact.id_user == user.id)
+    # contact = db.query(models.Contact).filter(
+    #     user.id == models.Contact.id).all()
+
+    return result
 
 
 async def get_me_contact_id(
@@ -142,7 +151,87 @@ async def delete_contact(
     db: _orm.Session = fastapi.Depends(get_db),
     token: str = fastapi.Depends(oauth2schema),
 ):
+    payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
     contact = db.query(models.Contact).filter(models.Contact.id == id).delete()
     db.commit()
 
-    return contact
+    return (contact)
+
+
+# Blog
+
+async def create_blog(
+    Blog: schemas.BlogCreate,
+    db: _orm.Session = fastapi.Depends(get_db),
+    token: str = fastapi.Depends(oauth2schema),
+
+):
+    blog_obj = models.Blog(
+        titre=Blog.titre, types=Blog.types, description=Blog.description, contenu=Blog.contenu, images=Blog.images
+    )
+    db.add(blog_obj)
+    db.commit()
+    db.refresh(blog_obj)
+
+    return (blog_obj)
+
+
+async def get_blog(
+    db: _orm.Session = fastapi.Depends(get_db),
+    token: str = fastapi.Depends(oauth2schema),
+
+):
+    blog = db.query(models.Blog).filter().all()
+    return blog
+
+
+async def delete_blog(
+    id: int,
+    db: _orm.Session = fastapi.Depends(get_db),
+    token: str = fastapi.Depends(oauth2schema),
+):
+    payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+    blog = db.query(models.Blog).filter(models.Blog.id == id).delete()
+    db.commit()
+
+    return (blog)
+
+
+# Projet
+
+
+async def create_projet(
+    Blog: schemas.ProjetCreate,
+    db: _orm.Session = fastapi.Depends(get_db),
+    token: str = fastapi.Depends(oauth2schema),
+
+):
+    projet_obj = models.Projet(
+        titre=Blog.titre, types=Blog.types, description=Blog.description, contenu=Blog.contenu, images=Blog.images
+    )
+    db.add(projet_obj)
+    db.commit()
+    db.refresh(projet_obj)
+
+    return (projet_obj)
+
+
+async def get_projet(
+    db: _orm.Session = fastapi.Depends(get_db),
+    token: str = fastapi.Depends(oauth2schema),
+
+):
+    projet = db.query(models.Projet).filter().all()
+    return projet
+
+
+async def delete_projet(
+    id: int,
+    db: _orm.Session = fastapi.Depends(get_db),
+    token: str = fastapi.Depends(oauth2schema),
+):
+    payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+    projet = db.query(models.Projet).filter(models.Projet.id == id).delete()
+    db.commit()
+
+    return (projet)

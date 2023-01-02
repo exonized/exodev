@@ -83,6 +83,8 @@ async def get_user(user: schemas.User = fastapi.Depends(crud.get_current_user)):
 async def delete_user(user: schemas.User = fastapi.Depends(crud.delete_current_user)):
     return user
 
+# Contact
+
 
 @app.post("/api/contact", tags=["Contact"])
 async def contact_create(contact: schemas.Contact = fastapi.Depends(crud.create_contact)):
@@ -104,9 +106,42 @@ async def delete_contact(id: int, contact: schemas.Contact = fastapi.Depends(cru
     return {"supprimer": contact}
 
 
+# Blog
+
+@app.post("/api/blog", tags=["Blog"])
+async def blog_create(blog: schemas.Blog = fastapi.Depends(crud.create_blog)):
+    return blog
+
+
+@app.get("/api/get/blog", tags=["Blog"])
+async def get_blog(blog: schemas.Blog = fastapi.Depends(crud.get_blog)):
+    return blog
+
+
+@app.delete("/api/blog/delete/{id}", tags=["Blog"])
+async def delete_blog(id: int, blog: schemas.Blog = fastapi.Depends(crud.delete_blog)):
+    return {"supprimer": blog}
+
+
+# Projets
+
+@app.post("/api/projet", tags=["Projet"])
+async def projet_create(projet: schemas.Projet = fastapi.Depends(crud.create_projet)):
+    return projet
+
+
+@app.get("/api/get/projet", tags=["Projet"])
+async def get_projet(projet: schemas.Projet = fastapi.Depends(crud.get_projet)):
+    return projet
+
+
+@app.delete("/api/projet/delete/{id}", tags=["Projet"])
+async def delete_projet(id: int, projet: schemas.Projet = fastapi.Depends(crud.delete_projet)):
+    return {"supprimer": projet}
+
 # API  (Base)
 
 
 @app.get("/", tags=["api"])
 def read_services():
-    return "API ANTHONY"
+    return "Bienvenue sur ExoDEV"
