@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import fastapi.security as _security
 
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
+from starlette.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 
@@ -18,6 +20,18 @@ import sqlalchemy.orm as _orm
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+conf = ConnectionConfig(
+    MAIL_USERNAME="exodev@outlook.fr",
+    MAIL_PASSWORD="Bs)Aa,LQ&3R-ee3",
+    MAIL_FROM="exodev@outlook.fr",
+    MAIL_PORT=587,
+    MAIL_SERVER="smtp-mail.outlook.com",
+    MAIL_STARTTLS=True,
+    MAIL_SSL_TLS=False,
+    USE_CREDENTIALS=True,
+    VALIDATE_CERTS=True
+)
 
 
 origins = [
@@ -145,3 +159,17 @@ async def delete_projet(id: int, projet: schemas.Projet = fastapi.Depends(crud.d
 @app.get("/", tags=["api"])
 def read_services():
     return "Bienvenue sur ExoDEV"
+
+
+@app.post("/email", tags=["api"])
+async def envois_email(email: schemas.EmailSchema) -> JSONResponse:
+
+    message = MessageSchema(
+        subject="ExoDEV - Vous avez reçu un nouveau message !",
+        recipients=email.dict().get("email"),
+        body=email.contenu,
+        subtype=MessageType.html)
+
+    fm = FastMail(conf)
+    await fm.send_message(message)
+    return JSONResponse(status_code=200, content={"message": "email has been sent"})

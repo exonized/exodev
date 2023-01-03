@@ -65,4 +65,5 @@ websockets==10.4
 Werkzeug==2.2.2
 WTForms==3.0.1
 passlib==1.7.4
+fastapi-mail==1.2.4
 

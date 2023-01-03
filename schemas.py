@@ -1,7 +1,8 @@
 from typing import Union
 import pydantic as _pydantic
 from datetime import datetime
-
+from typing import List
+from pydantic import BaseModel, EmailStr
 
 # Schéma de la class Utilisateur (Users)
 
@@ -96,3 +97,8 @@ class Blog(_BlogBase):
 
     class Config:
         orm_mode = True
+
+
+class EmailSchema(_pydantic.BaseModel):
+    email: List[EmailStr]
+    contenu: str

@@ -6,10 +6,26 @@ import fastapi
 import fastapi.security as _security
 from sqlalchemy import or_
 
+from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
+from pydantic import BaseModel, EmailStr
+from starlette.responses import JSONResponse
+
 import models
 import schemas
 import database
 
+
+conf = ConnectionConfig(
+    MAIL_USERNAME="exodev@outlook.fr",
+    MAIL_PASSWORD="Bs)Aa,LQ&3R-ee3",
+    MAIL_FROM="exodev@outlook.fr",
+    MAIL_PORT=587,
+    MAIL_SERVER="smtp-mail.outlook.com",
+    MAIL_STARTTLS=True,
+    MAIL_SSL_TLS=False,
+    USE_CREDENTIALS=True,
+    VALIDATE_CERTS=True
+)
 
 oauth2schema = _security.OAuth2PasswordBearer(tokenUrl="/api/token")
 JWT_SECRET = "myjwtsecret"
