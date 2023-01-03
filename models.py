@@ -24,6 +24,7 @@ class Contact(Base):
     __tablename__ = "Contact"
     id = Column(Integer, primary_key=True, index=True)
     id_user = Column(Integer)
+    email = Column(String)
     types = Column(String)
     contenu = Column(String)
     etat = Column(String,  default=('Non traité'))

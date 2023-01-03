@@ -43,6 +43,7 @@ class ContactCreate(_ContactBase):
 
 class Contact(_ContactBase):
     id: int
+    email: str
     id_user: int
     etat = str
 

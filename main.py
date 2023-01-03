@@ -172,4 +172,4 @@ async def envois_email(email: schemas.EmailSchema) -> JSONResponse:
 
     fm = FastMail(conf)
     await fm.send_message(message)
-    return JSONResponse(status_code=200, content={"message": "email has been sent"})
+    return JSONResponse(status_code=200, content={"message": "Votre message à bien était envoyer"})

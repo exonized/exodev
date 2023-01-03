@@ -125,7 +125,7 @@ async def create_contact(
     user = db.query(models.User).get(payload["id"])
 
     contact_obj = models.Contact(
-        id_user=user.id, types=Contact.types, contenu=Contact.contenu
+        id_user=user.id, email=user.email, types=Contact.types, contenu=Contact.contenu
     )
     db.add(contact_obj)
     db.commit()
