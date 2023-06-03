@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 function App() {
 
-  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios({
-      method: 'get',
-      url: urlapi + '/'
-    })
-      .then((response) => {
 
+
+    axios.get('http://localhost:8081/')
+      .then(response => {
+        console.log(response.data);
       })
       .catch(error => {
-        console.log("ERROR: ", error);
+        console.error(error);
       });
 
   }, []);
 
+
+
   return (
     <div>
-      <h1>Hello from React!</h1>
-      {categories}
+      <h1>Hello from Readfdgfgfghft!</h1>
     </div>
   );
 }
